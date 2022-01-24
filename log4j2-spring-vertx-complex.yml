@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG" monitorInterval="30">
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{[%level]} %cyan{%d{yyyy-MM-dd HH:mm:ss.SSS}} %blue{[%t]} %magenta{[%c{1}%notEmpty{|%marker}]} %highlight{%msg%n%ex}{INFO=normal, DEBUG=normal, TRACE=normal}"/>
+        </Console>
+
+        <RollingRandomAccessFile name="service-log"
+                                 fileName="logs/vietjet-service.log"
+                                 filePattern="logs/vietjet-service-%d{yyyy-MM-dd}.log.zip">
+            <PatternLayout
+                    pattern="%highlight{[%level]} %cyan{%d{yyyy-MM-dd HH:mm:ss.SSS}} %blue{[%t]} %magenta{[%c{1}%notEmpty{|%marker}]} %highlight{%msg%n%ex}{INFO=normal, DEBUG=normal, TRACE=normal}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="error-log"
+                                 fileName="logs/vietjet-service-error.log"
+                                 filePattern="logs/vietjet-service-error-%d{yyyy-MM-dd}.log.zip">
+            <PatternLayout pattern="[%level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%c{1}%notEmpty{|%marker}]%msg%n%ex"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="debug-log"
+                                 fileName="logs/vietjet-service-debug.log"
+                                 filePattern="logs/vietjet-service-debug-%d{yyyy-MM-dd}.log.zip">
+            <PatternLayout pattern="[%level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%c{1}%notEmpty{|%marker}]%msg%n%ex"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="DEBUG">
+            <AppenderRef ref="Console" level="DEBUG"/>
+            <AppenderRef ref="service-log" level="INFO"/>
+            <AppenderRef ref="error-log" level="ERROR"/>
+            <AppenderRef ref="debug-log" level="DEBUG"/>
+        </Root>
+
+        <Logger name="org.hibernate" level="INFO"/>
+        <Logger name="org.hibernate.SQL" level="DEBUG"/>
+        <Logger name="org.hibernate.type.descriptor.sql" level="OFF"/>
+        <Logger name="com.zaxxer.hikari.pool" level="OFF"/>
+        <Logger name="org.apache.kafka" level="OFF"/>
+    </Loggers>
+</Configuration>
